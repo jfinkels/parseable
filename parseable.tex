@@ -1,0 +1,141 @@
+%%%%
+%% parseable.tex
+%%
+%% Copyright 2011 Jeffrey Finkelstein
+%%
+%% Except where otherwise noted, this work is made available under the terms of
+%% the Creative Commons Attribution-ShareAlike 3.0 license,
+%% http://creativecommons.org/licenses/by-sa/3.0/.
+%%
+%% You are free:
+%%    * to Share — to copy, distribute and transmit the work
+%%    * to Remix — to adapt the work
+%% Under the following conditions:
+%%    * Attribution — You must attribute the work in the manner specified by
+%%    the author or licensor (but not in any way that suggests that they
+%%    endorse you or your use of the work).
+%%    * Share Alike — If you alter, transform, or build upon this work, you may
+%%    distribute the resulting work only under the same, similar or a 
+%%    compatible license.
+%%    * For any reuse or distribution, you must make clear to others the 
+%%    license terms of this work. The best way to do this is with a link to the
+%%    web page http://creativecommons.org/licenses/by-sa/3.0/.
+%%    * Any of the above conditions can be waived if you get permission from
+%%    the copyright holder.
+%%    * Nothing in this license impairs or restricts the author's moral rights.
+%%%%
+\documentclass[draft]{article}
+\usepackage{amsthm}
+\usepackage{complexity}
+\usepackage{float}
+\usepackage{syntax}
+\usepackage[pdftitle={Parsing first-order propositional logic}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+
+\floatstyle{ruled}
+\restylefloat{figure}
+
+\newtheorem{theorem}{Theorem}
+
+\newtheorem{conjecture}{Conjecture}
+\newenvironment{rationale}{\begin{proof}[Rationale]}{\end{proof}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\long\def\symbolfootnote#1{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup} 
+\newcommand{\makelicense}{
+  Copyright 2010, 2011 Jeffrey Finkelstein.
+  This work is licensed under the Creative Commons Attribution-ShareAlike License.
+  To view a copy of this license, visit \mbox{\url{http://creativecommons.org/licenses/by-sa/3.0/}}}
+
+\newenvironment{langdef}[1]{\begin{definition}{\lang{#1}}}{\end{definition}}
+\newenvironment{instance}{\\Instance:}{}
+\newenvironment{question}{\\Question:}{}
+
+\newcommand{\pp}{PERM\mbox{-}PARSE}
+
+\author{Jeffrey~Finkelstein}
+\title{Parsing first-order propositional logic}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+We wish to determine the complexity of deciding whether a given multiset of symbols, chosen from some finite set of symbols, can be derived according to the rules of a given context-free grammar.
+
+We define the context-free grammar of first-order predicate logic as follows.
+\begin{definition}
+  The language of first-order predicate logic consists of
+  \begin{itemize}
+  \item a set of variables $\{x_1, x_2, \ldots, x_n\}$,
+  \item a set of constants $\{a_1, a_2, \ldots, a_c\}$,
+  \item a set of functions $\{f^{m_1}_1, f^{m_2}_2, \ldots, f^{m_k}_k\}$, where each function $f_i$ has arity $m_i$,
+  \item a set of relations (or ``propositions'') $\{R^{l_1}_1, R^{l_2}_2, \ldots, R^{l_d}_d\}$, where each relation $R_i$ has arity $l_i$, and
+  \item a set of logical symbols $\{\land, \lor, \lnot, \exists, \forall\}$
+  \end{itemize}
+  subject to the grammar described in \autoref{fig:grammar}.
+  \begin{figure}
+    \caption{\label{fig:grammar}The context-free grammar specification in Backus--Naur form for first-order propositional logic.}
+  \begin{grammar}
+    <term> := $x_i$ | $a_i$ | $f^m_i(t_1, t_2, \ldots, t_m)$, where each $t_j$ is a <term>
+
+    <formula> := $(R^l_i(t_1, t_2, \ldots, t_l))$, where each $t_j$ is a <term>
+    \alt (<formula> $\lor$ <formula>)
+    \alt (<formula> $\land$ <formula>)
+    \alt $\lnot$ (<formula>)
+    \alt $\exists x_i$ (<formula>)
+    \alt $\forall x_i$ (<formula>)
+  \end{grammar}
+  \end{figure}
+  A \emph{sentence} is a closed formula, that is, a formula with no free occurences of any variable.
+\end{definition}
+\begin{definition}
+  Let $V$ be a set of variables, $A$ a set of constants, $F$ a set of functions (with their arities), $P$ a set of relations (with their arities), and $L$ the set of logical symbols.
+  Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
+  Then $w$ is \emph{parseable} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
+\end{definition}
+
+\begin{langdef}{PARSEABLE}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Is $w$ parseable?
+  \end{question}
+\end{langdef}
+
+\lang{PARSEABLE}, the problem of recognizing whether a string is parseable with respect to a given unambiguous context-free grammar, is decidable in polynomial time.
+Suppose $p$ is the polynomial bounding the running time of the machine which decides \lang{PARSEABLE}.
+
+\begin{langdef}{\pp}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)$ is parseable?
+  \end{question}
+\end{langdef}
+
+The na\"ive solution to the \lang{\pp} problem is to enumerate all possible permutations of $W$, checking if each one of them is parseable.
+If $n=|W|$, this algorithm runs in $O(p(n)\cdot n!)$ time.
+
+\begin{theorem}
+  $\lang{\pp}\in\NP$.
+\end{theorem}
+\begin{proof}
+  The witness is the permutation of $W$ which is parseable.
+  Its size is linear with respect to the size of the input $|W|$.
+  Checking whether the permutation is parseable can be performed in $p(|W|)$ time.
+\end{proof}
+
+\begin{conjecture}
+  $\lang{\pp}$ is \NP-complete.
+\end{conjecture}
+\begin{rationale}
+  The hardness of this problem comes from finding the correct permutation of the symbols of $W$.
+  There are other \NP-complete problems which also require finding a permutation with some property---finding a Hamiltonian path in a directed graph, for example.
+\end{rationale}
+
+\symbolfootnote{\makelicense}
+\end{document}
