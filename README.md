@@ -28,7 +28,7 @@ Compiling
 
 To compile the paper, run 
 
-  ./compile-paper.sh
+    ./compile-paper.sh
 
 The output is `parseable.pdf`.
 
