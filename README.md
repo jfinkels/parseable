@@ -1,14 +1,27 @@
 Dependencies
 ============
 
-Besides `pdflatex`, compile-time dependencies for the paper include the
-following LaTeX packages:
+Besides `pdflatex`, compile-time dependencies include the following LaTeX
+packages:
 
-* amsthm.sty
-* complexity.sty
-* float.sty
-* hyperref.sty
-* syntax.sty
+* `amsthm.sty`
+* `complexity.sty`
+* `float.sty`
+* `hyperref.sty`
+* `syntax.sty`
+
+On Ubuntu 11.04 or 11.10, the necessary system packages which contain these
+LaTeX packages are:
+
+* `texlive-latex-base`
+* `texlive-latex-extra`
+* `texlive-latex-recommended`
+* `texlive-science`
+
+To install them, run
+
+    sudo apt-get install texlive-latex-base texlive-latex-extra \
+      texlive-latex-recommended texlive-science
 
 Compiling
 =========
