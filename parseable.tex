@@ -39,6 +39,8 @@
 \newtheorem{conjecture}{Conjecture}
 \newenvironment{rationale}{\begin{proof}[Rationale]}{\end{proof}}
 
+\newtheorem{todo}{TODO}
+
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 
@@ -53,7 +55,8 @@
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{question}{\\Question:}{}
 
-\newcommand{\pp}{PERM\mbox{-}PARSE}
+\newcommand{\pp}{PERM\mbox{-}PARSEABLE}
+\newcommand{\pc}{PERM\mbox{-}CLOSED}
 
 \author{Jeffrey~Finkelstein}
 \title{Parsing first-order propositional logic}
@@ -88,12 +91,15 @@ We define the context-free grammar of first-order predicate logic as follows.
     \alt $\forall x_i$ (<formula>)
   \end{grammar}
   \end{figure}
-  A \emph{sentence} is a closed formula, that is, a formula with no free occurences of any variable.
 \end{definition}
 \begin{definition}
   Let $V$ be a set of variables, $A$ a set of constants, $F$ a set of functions (with their arities), $P$ a set of relations (with their arities), and $L$ the set of logical symbols.
   Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
-  Then $w$ is \emph{parseable} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
+  Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
+
+  A variable $x\in V$ is \emph{bound} if it is the ancestor of a quantifier formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
+  A variable is \emph{free} if it is not bound.
+  A \emph{closed formula} (or a \emph{sentence}) is a formula in which all variables appearing in the formula are bound.
 \end{definition}
 
 \begin{langdef}{PARSEABLE}
@@ -101,24 +107,52 @@ We define the context-free grammar of first-order predicate logic as follows.
     finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Is $w$ parseable?
+    Is $w$ a well-formed formula?
+  \end{question}
+\end{langdef}
+
+\begin{langdef}{CLOSED}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Is $w$ a closed well-formed formula?
   \end{question}
 \end{langdef}
 
 \lang{PARSEABLE}, the problem of recognizing whether a string is parseable with respect to a given unambiguous context-free grammar, is decidable in polynomial time.
 Suppose $p$ is the polynomial bounding the running time of the machine which decides \lang{PARSEABLE}.
 
+\begin{todo}
+  \lang{CLOSED}, the problem of recognizing whether a string is not only parseable but also closed, has what complexity?
+\end{todo}
+
+We now wish to be able to discern whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
+
 \begin{langdef}{\pp}
   \begin{instance}
     finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)$ is parseable?
+    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{PARSEABLE}$?
+  \end{question}
+\end{langdef}
+
+\begin{langdef}{\pc}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{CLOSED}$?
   \end{question}
 \end{langdef}
 
 The na\"ive solution to the \lang{\pp} problem is to enumerate all possible permutations of $W$, checking if each one of them is parseable.
 If $n=|W|$, this algorithm runs in $O(p(n)\cdot n!)$ time.
+
+\begin{todo}
+  What is the complexity of the \lang{\pc} problem? It depends on the complexity of the \lang{CLOSED} problem.
+\end{todo}
 
 \begin{theorem}
   $\lang{\pp}\in\NP$.
@@ -136,6 +170,7 @@ If $n=|W|$, this algorithm runs in $O(p(n)\cdot n!)$ time.
   The hardness of this problem comes from finding the correct permutation of the symbols of $W$.
   There are other \NP-complete problems which also require finding a permutation with some property---finding a Hamiltonian path in a directed graph, for example.
 \end{rationale}
+
 
 \symbolfootnote{\makelicense}
 \end{document}
