@@ -26,6 +26,7 @@
 %%%%
 \documentclass[draft]{article}
 \usepackage{amsthm}
+\usepackage{amssymb}
 \usepackage{complexity}
 \usepackage{float}
 \usepackage{syntax}
@@ -37,12 +38,13 @@
 \newtheorem{theorem}{Theorem}
 
 \newtheorem{conjecture}{Conjecture}
+\newenvironment{sketch}{\begin{proof}[Proof sketch]}{\end{proof}}
 \newenvironment{rationale}{\begin{proof}[Rationale]}{\end{proof}}
 
 \newtheorem{todo}{TODO}
-
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark} \newtheorem{technicality}{Technical note}
+\theoremstyle{definition} \newtheorem{definition}{Definition}
 
 \long\def\symbolfootnote#1{\begingroup%
 \def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup} 
@@ -51,6 +53,11 @@
   This work is licensed under the Creative Commons Attribution-ShareAlike License.
   To view a copy of this license, visit \mbox{\url{http://creativecommons.org/licenses/by-sa/3.0/}}}
 
+\newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}} % formatting emails
+\newcommand{\lb}{\left\{} % left curly brace for set notation
+\newcommand{\rb}{\right\}} % right curly brace for set notation
+\newcommand{\st}{\,\middle|\,} % ``such that'' pipe, for use in set definitions
+
 \newenvironment{langdef}[1]{\begin{definition}{\lang{#1}}}{\end{definition}}
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{question}{\\Question:}{}
@@ -58,14 +65,16 @@
 \newcommand{\pp}{PERM\mbox{-}PARSEABLE}
 \newcommand{\pc}{PERM\mbox{-}CLOSED}
 
-\author{Jeffrey~Finkelstein}
+\author{Jef{}frey~Finkelstein \and Andr\'as Kornai}
 \title{Parsing first-order propositional logic}
 \date{\today}
 
 \begin{document}
 \maketitle
+\symbolfootnote{\makelicense}
 
 We wish to determine the complexity of deciding whether a given multiset of symbols, chosen from some finite set of symbols, can be derived according to the rules of a given context-free grammar.
+We denote the set of all context-free languages by \CFL.
 
 We define the context-free grammar of first-order predicate logic as follows.
 \begin{definition}
@@ -75,23 +84,36 @@ We define the context-free grammar of first-order predicate logic as follows.
   \item a set of constants $\{a_1, a_2, \ldots, a_c\}$,
   \item a set of functions $\{f^{m_1}_1, f^{m_2}_2, \ldots, f^{m_k}_k\}$, where each function $f_i$ has arity $m_i$,
   \item a set of relations (or ``propositions'') $\{R^{l_1}_1, R^{l_2}_2, \ldots, R^{l_d}_d\}$, where each relation $R_i$ has arity $l_i$, and
-  \item a set of logical symbols $\{\land, \lor, \lnot, \exists, \forall, (, ), COMMA \}$, where $COMMA$ is the symbol ``,''
+  \item a set of logical symbols $\{\land, \lor, \lnot, \exists, \forall, C\}$ (where $C$ represents a comma).
   \end{itemize}
   subject to the grammar described in \autoref{fig:grammar}.
+  Without loss of generality, we will use Polish (prefix) notation for the grammar.
   \begin{figure}
-    \caption{\label{fig:grammar}The context-free grammar specification in Backus--Naur form for first-order propositional logic.}
+    \caption{\label{fig:grammar}The context-free grammar specification in Backus--Naur form for first-order propositional logic (using Polish [prefix] notation).
+    Here, $\lambda$ represents the empty string.}
   \begin{grammar}
-    <term> := $x_i$ | $a_i$ | $f^m_i(t_1, t_2, \ldots, t_m)$, where each $t_j$ is a <term>
+    <termlist> := $\lambda$ | <term> | <term> <termlist>
 
-    <formula> := $(R^l_i(t_1, t_2, \ldots, t_l))$, where each $t_j$ is a <term>
-    \alt (<formula> $\lor$ <formula>)
-    \alt (<formula> $\land$ <formula>)
-    \alt $\lnot$ (<formula>)
-    \alt $\exists x_i$ (<formula>)
-    \alt $\forall x_i$ (<formula>)
+    <term> := $x_i$ | $a_i$ | $f^m_i$ <termlist>
+
+    <formula> := $R^l_i$ <termlist>
+    \alt $\lor$ <formula> <formula>
+    \alt $\land$ <formula> <formula>
+    \alt $\lnot$ <formula>
+    \alt $\exists x_i$ <formula>
+    \alt $\forall x_i$ <formula>
   \end{grammar}
   \end{figure}
 \end{definition}
+
+\begin{technicality}\label{tech:arity}
+  In practice, decimal numbers may be encoded using binary strings.
+  Additionally, symbols with indices or arities may not be treated atomically.
+  However, we can encode, for example, a function $f_i^j$ (and similarly for a relation $R_i^j$) as the string $f0^i10^j$.
+  More specifically, the application of the function $f_5^3$ to the inputs $x_1$, $x_2$, and $x_3$ can be encoded as $f000001000 x1 x10 x11$.
+  This allows us to drop the commas as well, since the arity of the function is specified in the prefix.
+\end{technicality}
+
 \begin{definition}
   Let $V$ be a set of variables, $A$ a set of constants, $F$ a set of functions (with their arities), $P$ a set of relations (with their arities), and $L$ the set of logical symbols.
   Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
@@ -123,9 +145,18 @@ We define the context-free grammar of first-order predicate logic as follows.
 \lang{PARSEABLE}, the problem of recognizing whether a string is parseable with respect to a given unambiguous context-free grammar, is decidable in polynomial time.
 Suppose $p$ is the polynomial bounding the running time of the machine which decides \lang{PARSEABLE}.
 
-\begin{todo}
-  \lang{CLOSED}, the problem of recognizing whether a string is not only parseable but also closed, has what complexity?
-\end{todo}
+\begin{proposition}
+  $\lang{CLOSED}\notin\CFL$.
+\end{proposition}
+\begin{sketch}
+  Assume $\lang{CLOSED}\in\CFL$.
+  Consider the regular language $L$ defined by $(\forall x1^*)^* f0^*10^*(x1^*)^*$.
+  Here we have variable subscripts expressed in unary and function subscripts and arities expressed as described in \autoref{tech:arity}.
+  Denote the set of regular languages by $\REG$.
+  We know that $\REG\subseteq\CFL$, so $L\in\CFL$.
+  $L$ can be transduced to the language defined by $\lb w \st w=a^nb^nc^n\textnormal{ for some } n\in\mathbb{N}\rb$, but this language is known not to be context-free.
+  This is a contradiction, therefore $\lang{CLOSED}\notin\CFL$.
+\end{sketch}
 
 We now wish to be able to discern whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
 
@@ -171,6 +202,14 @@ If $n=|W|$, this algorithm runs in $O(p(n)\cdot n!)$ time.
   There are other \NP-complete problems which also require finding a permutation with some property---finding a Hamiltonian path in a directed graph, for example.
 \end{rationale}
 
+\section{About this work}
 
-\symbolfootnote{\makelicense}
+This work is licensed under the Creative Commons Attribution-ShareAlike License.
+Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
+
+The \LaTeX{} markup which generated this document can be downloaded at \mbox{\url{https://github.com/jfinkels/parseable}}.
+It is also licensed under the Creative Commons Attribution-ShareAlike License.
+
+The author can be contacted via email at \email{jeffreyf@bu.edu}.
+
 \end{document}
