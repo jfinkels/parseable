@@ -174,7 +174,8 @@ Just for context (pun intended), here's some inclusions among these complexity c
 \end{theorem}
 
 We know that $\lang{PARSEABLE}\in\CFL$.
-We also know that $\lang{CLOSED}\notin\CFL$ and $\lang{CLOSED}\in\INDEXED$ from \cite{mp84}.
+We also know from \cite{mp84} that $\lang{CLOSED}\in\INDEXED\setminus\CFL$.
+(In that paper, the authors also conjecture that the related problem of deciding whether a given formula has no vacuous quantifiers is \emph{not} in $\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.)
 However, we will consider a more difficult problem.
 We wish to decide whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
 
