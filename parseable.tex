@@ -235,21 +235,11 @@ We wish to decide whether a given multiset of symbols has a permutation which is
 
 With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence.
 
-\begin{theorem}
-  $\lang{\pp}\in\NP$.
-\end{theorem}
-\begin{proof}
-  The witness is the permutation of $W$ which is parseable.
-  Its size is linear with respect to the size of the input $|W|$.
-  Checking whether the permutation is parseable can be performed in $p(|W|)$ time.
-\end{proof}
-
 \begin{conjecture}
-  $\lang{\pp}$ is \NP-complete.
+  The recognition problem for the class of permuted indexed languages is \EXP-complete.
 \end{conjecture}
 \begin{rationale}
-  The hardness of this problem comes from finding the correct permutation of the symbols of $W$.
-  There are other \NP-complete problems which also require finding a permutation with some property---finding a Hamiltonian path in a directed graph, for example.
+  Checking each permutation can be performed in exponential time, and the recognition problem for indexed languages reduces to it.
 \end{rationale}
 
 \section{About this work}
