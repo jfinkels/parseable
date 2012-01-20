@@ -54,6 +54,7 @@
   To view a copy of this license, visit \mbox{\url{http://creativecommons.org/licenses/by-sa/3.0/}}}
 
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}} % formatting emails
+\newcommand{\pair}[2]{\langle#1,#2\rangle} % pairing function
 \newcommand{\lb}{\left\{} % left curly brace for set notation
 \newcommand{\rb}{\right\}} % right curly brace for set notation
 \newcommand{\st}{\,\middle|\,} % ``such that'' pipe, for use in set definitions
@@ -177,6 +178,12 @@ Let us define some complexity classes in order to help classify the complexity o
   \item $\NSA$ is the set of all languages accepted by one-way nondeterministic stack automata.
   \end{itemize}
 \end{definition}
+Indexed grammars were introduced by Aho in \cite{aho}.
+
+The recognition problem (also known as the parsing problem) for a class of languages $\mathcal{C}$ is the problem of deciding membership in $\lb\pair{L}{w}\st w\in L \land L\in\mathcal{C} \rb$.
+% source: Wikipedia article on CYK algorithm
+The recognition problem for context-free languages is decidable in polynomial time (by, for example, the CYK algorithm).
+The recognition problem for indexed languages is \EXP-complete \cite{tk86} (the cited article is not available, but I have ordered a copy of it from the library).
 
 Just for context (pun intended), here's some inclusions among these complexity classes.
 Some of these inclusions are strict.
@@ -186,12 +193,9 @@ Some of these inclusions are strict.
   \item $\CFL\subseteq\AC^1\subseteq\NC^2\subseteq\P$.
     % source: complexity zoo
   \item $\CFL\subseteq\GCSL\subseteq\CSL=\NSPACE(n)\subseteq\NLINSPACE\subseteq\E$.
-    % from Hopcroft, Ullman 1979, Introduction to Automata Theory, Languages,
-    % and Computation
-  \item $\CFL\subseteq\NSA\subseteq\INDEXED\subseteq\CSL$.
+  \item $\CFL\subseteq\NSA\subseteq\INDEXED\subseteq\CSL$ \cite{hu79}.
   \end{enumerate}
 \end{theorem}
-According to \cite{gp85}, ``the time complexity of the recognition problem [for indexed grammars] is exponential'', but this is a bit vague.
 
 We know the following facts about the complexity of the three languages of interest.
 \begin{itemize}
