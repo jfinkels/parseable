@@ -119,7 +119,8 @@ We define the context-free grammar of first-order predicate logic as follows.
   Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
   Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
 
-  A variable $x\in V$ is \emph{bound} if it is the ancestor of a quantifier formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
+  A variable $x\in V$ is \emph{bound} if it is the descendant of a quantified formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
+  The \emph{scope} of a quantifier (with respect to its quantified variable) is the smallest well-formed formula following it.
   A variable is \emph{free} if it is not bound.
   A \emph{closed formula} (or a \emph{sentence}) is a formula in which all variables appearing in the formula are bound.
 \end{definition}
