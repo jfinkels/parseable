@@ -64,6 +64,7 @@
 
 \newcommand{\pp}{PERM\mbox{-}PARSEABLE}
 \newcommand{\pc}{PERM\mbox{-}CLOSED}
+\newcommand{\pn}{PERM\mbox{-}NVQ}
 
 \author{Jef{}frey~Finkelstein \and Andr\'as Kornai}
 \title{Parsing first-order propositional logic}
@@ -120,11 +121,14 @@ We define the context-free grammar of first-order predicate logic as follows.
   Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
 
   A variable $x\in V$ is \emph{bound} if it is the descendant of a quantified formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
-  The \emph{scope} of a quantifier (with respect to its quantified variable) is the smallest well-formed formula following it.
   A variable is \emph{free} if it is not bound.
+  The \emph{scope} of a quantifier (with respect to its quantified variable) is the well-formed formula following it.
+  A \emph{vacuous quantifier} is one whose quantified variable does not appear as a free variable in its scope (though the variable may appear as a bound variable).
+
   A \emph{closed formula} (or a \emph{sentence}) is a formula in which all variables appearing in the formula are bound.
 \end{definition}
 
+%% TODO change w to phi
 \begin{langdef}{PARSEABLE}
   \begin{instance}
     finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
@@ -142,6 +146,18 @@ We define the context-free grammar of first-order predicate logic as follows.
     Is $w$ a closed well-formed formula?
   \end{question}
 \end{langdef}
+
+\begin{langdef}{NVQ}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Is $w$ a well-formed formula with no vacuous quantifiers?
+  \end{question}
+\end{langdef}
+
+\lang{CLOSED} is sometimes called the ``no free variables'' problem, and \lang{NVQ} is sometimes called the ``no vacuous quantifiers'' problem.
+Note that \lang{NVQ} does not require that the well-formed formula be closed, just that is has no vacuous quantifiers.
 
 Let us define some complexity classes in order to help classify the complexity of these problems.
 \begin{definition}\mbox{}
@@ -176,11 +192,14 @@ Some of these inclusions are strict.
   \end{enumerate}
 \end{theorem}
 
-We know that $\lang{PARSEABLE}\in\CFL$.
-We also know from \cite{mp84} that $\lang{CLOSED}\in\INDEXED\setminus\CFL$.
-(In that paper, the authors also conjecture that the related problem of deciding whether a given formula has no vacuous quantifiers is \emph{not} in $\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.)
-However, we will consider a more difficult problem.
-We wish to decide whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
+We know the following facts about the complexity of the three languages of interest.
+\begin{itemize}
+\item $\lang{PARSEABLE}\in\CFL$.
+\item $\lang{CLOSED}\in\INDEXED\setminus\CFL$. \cite{mp84}
+\item It is conjectured in \cite{mp84} that $\lang{NVQ}\notin\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
+\end{itemize}
+However, we will consider more difficult problems.
+We wish to decide whether a given multiset of symbols has a permutation which is parseable, closed, or without vacuous quantifiers.
 
 \begin{langdef}{\pp}
   \begin{instance}
@@ -199,6 +218,17 @@ We wish to decide whether a given multiset of symbols has a permutation which is
     Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{CLOSED}$?
   \end{question}
 \end{langdef}
+
+\begin{langdef}{\pn}
+  \begin{instance}
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+  \end{instance}
+  \begin{question}
+    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{NVQ}$?
+  \end{question}
+\end{langdef}
+
+With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence.
 
 \begin{theorem}
   $\lang{\pp}\in\NP$.
