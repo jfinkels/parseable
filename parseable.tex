@@ -142,23 +142,41 @@ We define the context-free grammar of first-order predicate logic as follows.
   \end{question}
 \end{langdef}
 
-\lang{PARSEABLE}, the problem of recognizing whether a string is parseable with respect to a given unambiguous context-free grammar, is decidable in polynomial time.
-Suppose $p$ is the polynomial bounding the running time of the machine which decides \lang{PARSEABLE}.
+Let us define some complexity classes in order to help classify the complexity of these problems.
+\begin{definition}\mbox{}
+  \begin{itemize}
+  \item $\CFL$ is the set of all context-free languages, or equivalently the set of all languages accepted by nondeterministic pushdown automata.
+  \item $\DCFL$ is the set of all languages accepted by deterministic pushdown automata.
+  \item $\CSL$ is the set of all context-sensitive languages, or equivalently the set of all languages accepted by linear-bounded automata.
+  \item $\GCSL$ is the set of all context-sensitive languages in which the right side of each transformation in the context-sensitive grammar is either strictly longer than the left side or the left side is the start symbol.
+    % from Hopcroft Ullman
+  \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata.
+  \item $\AC^1$ is the set of all languages accepted by non-uniform, polynomial size, $O(\lg(n))$, unbounded fan-in circuits with AND, OR, and NOT gates.
+  \item $\NC^2$ is the set of all languages accepted by uniform, polynomial size, $O(\lg^2(n))$, fan-in 2 circuits with AND, OR, and NOT gates.
+  \item $\P$ is the set of all languages accepted by a deterministic Turing machine running in polynomial time.
+  \item $\NSPACE(n)$ is the set of all languages accepted by a nondeterministic Turing machine using at most $n$ space, where $n$ is the length of the input.
+  \item $\NLINSPACE$ is the set of all languages accepted by a nondeterministic Turing machine using space at most linear in the length of the input.
+  \item $\E$ is the set of all languages accepted by a deterministic Turing machine running in $2^O(n)$ time.
+  \item $\NSA$ is the set of all languages accepted by one-way nondeterministic stack automata.
+  \end{itemize}
+\end{definition}
+Just for context (pun intended), here's some inclusions among these complexity classes.
+\begin{theorem}\mbox{}
+  \begin{enumerate}
+    % source: complexity zoo
+  \item $\CFL\subseteq\AC^1\subseteq\NC^2\subseteq\P$.
+    % source: complexity zoo
+  \item $\CFL\subseteq\GCSL\subseteq\CSL=\NSPACE(n)\subseteq\NLINSPACE\subseteq\E$.
+    % from Hopcroft, Ullman 1979, Introduction to Automata Theory, Languages,
+    % and Computation
+  \item $\CFL\subseteq\NSA\subseteq\INDEXED\subseteq\CSL$.
+  \end{enumerate}
+\end{theorem}
 
-\begin{proposition}
-  $\lang{CLOSED}\notin\CFL$.
-\end{proposition}
-\begin{sketch}
-  Assume $\lang{CLOSED}\in\CFL$.
-  Consider the regular language $L$ defined by $(\forall x1^*)^* f0^*10^*(x1^*)^*$.
-  Here we have variable subscripts expressed in unary and function subscripts and arities expressed as described in \autoref{tech:arity}.
-  Denote the set of regular languages by $\REG$.
-  We know that $\REG\subseteq\CFL$, so $L\in\CFL$.
-  $L$ can be transduced to the language defined by $\lb w \st w=a^nb^nc^n\textnormal{ for some } n\in\mathbb{N}\rb$, but this language is known not to be context-free.
-  This is a contradiction, therefore $\lang{CLOSED}\notin\CFL$.
-\end{sketch}
-
-We now wish to be able to discern whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
+We know that $\lang{PARSEABLE}\in\CFL$.
+We also know that $\lang{CLOSED}\notin\CFL$ and $\lang{CLOSED}\in\INDEXED$ from \cite{mp84}.
+However, we will consider a more difficult problem.
+We wish to decide whether a given multiset of symbols has a permutation which is parseable, and also whether it has a permutation which is a closed well-formed formula.
 
 \begin{langdef}{\pp}
   \begin{instance}
@@ -177,13 +195,6 @@ We now wish to be able to discern whether a given multiset of symbols has a perm
     Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{CLOSED}$?
   \end{question}
 \end{langdef}
-
-The na\"ive solution to the \lang{\pp} problem is to enumerate all possible permutations of $W$, checking if each one of them is parseable.
-If $n=|W|$, this algorithm runs in $O(p(n)\cdot n!)$ time.
-
-\begin{todo}
-  What is the complexity of the \lang{\pc} problem? It depends on the complexity of the \lang{CLOSED} problem.
-\end{todo}
 
 \begin{theorem}
   $\lang{\pp}\in\NP$.
@@ -211,5 +222,8 @@ The \LaTeX{} markup which generated this document can be downloaded at \mbox{\ur
 It is also licensed under the Creative Commons Attribution-ShareAlike License.
 
 The author can be contacted via email at \email{jeffreyf@bu.edu}.
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
 
 \end{document}
