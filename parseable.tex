@@ -94,16 +94,16 @@ We define the context-free grammar of first-order predicate logic as follows.
     \caption{\label{fig:grammar}The context-free grammar specification in Backus--Naur form for first-order propositional logic (using Polish [prefix] notation).
     Here, $\lambda$ represents the empty string.}
   \begin{grammar}
-    <termlist> := $\lambda$ | <term> | <term> <termlist>
+    <term> := $x_i$, where $x_i$ is a variable
+    \alt $a_i$, where $a_i$ is a term
+    \alt $f^m_i(t_1, t_2, \ldots, t_m)$, where each $t_j$ is a <term>
 
-    <term> := $x_i$ | $a_i$ | $f^m_i$ <termlist>
-
-    <formula> := $R^l_i$ <termlist>
+    <formula> := $R^l_i(F_1, F_2, \ldots, F_l)$, where each $F_j$ is a <formula>
     \alt $\lor$ <formula> <formula>
     \alt $\land$ <formula> <formula>
     \alt $\lnot$ <formula>
-    \alt $\exists x_i$ <formula>
-    \alt $\forall x_i$ <formula>
+    \alt $\exists x_i$ <formula>, where $x_i$ is a variable
+    \alt $\forall x_i$ <formula>, where $x_i$ is a variable
   \end{grammar}
   \end{figure}
 \end{definition}
