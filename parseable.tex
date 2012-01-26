@@ -167,6 +167,7 @@ Let us define some complexity classes in order to help classify the complexity o
   \item $\DCFL$ is the set of all languages accepted by deterministic pushdown automata.
   \item $\CSL$ is the set of all context-sensitive languages, or equivalently the set of all languages accepted by linear-bounded automata.
   \item $\GCSL$ is the set of all context-sensitive languages in which the right side of each transformation in the context-sensitive grammar is either strictly longer than the left side or the left side is the start symbol.
+  \item $\MCSL$ is the set of all mildly context-sensitive languages (for a precise definition, see \autoref{app:definitions}).
     % from Hopcroft Ullman
   \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata.
   \item $\AC^1$ is the set of all languages accepted by non-uniform, polynomial size, $O(\lg(n))$, unbounded fan-in circuits with AND, OR, and NOT gates.
@@ -193,7 +194,7 @@ Some of these inclusions are strict.
   \item $\CFL\subseteq\AC^1\subseteq\NC^2\subseteq\P$.
     % source: complexity zoo
   \item $\CFL\subseteq\GCSL\subseteq\CSL=\NSPACE(n)\subseteq\NLINSPACE\subseteq\E$.
-  \item $\CFL\subseteq\NSA\subseteq\INDEXED\subseteq\CSL$ \cite{hu79}.
+  \item $\CFL\subseteq\NSA\subseteq\MCSL\subseteq\INDEXED\subseteq\CSL$ \cite{hu79}.
   \end{enumerate}
 \end{theorem}
 
@@ -203,8 +204,12 @@ We know the following facts about the complexity of the three languages of inter
 \item $\lang{CLOSED}\in\INDEXED\setminus\CFL$. \cite{mp84}
 \item It is conjectured in \cite{mp84} that $\lang{NVQ}\notin\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
 \end{itemize}
-However, we will consider more difficult problems.
+\lang{CLOSED} may in fact be in a complexity class which is a subset of $\INDEXED$, like, for example, the class of mildly context-sensitive languages.
+This seems to be an open problem.
+
+In addition to the three problems defined above, we will consider three corresponding problems which are at least as difficult.
 We wish to decide whether a given multiset of symbols has a permutation which is parseable, closed, or without vacuous quantifiers.
+If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arbitrary order) and $\sigma\in S_n$ (that is, a permutation on $n$ elements), then we will denote by $\sigma(W)$ the sequence $(a_{\sigma(1)}, a_{\sigma(2)}, \ldots, a_{\sigma(n)})$.
 
 \begin{langdef}{\pp}
   \begin{instance}
@@ -254,5 +259,32 @@ The author can be contacted via email at \email{jeffreyf@bu.edu}.
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
+
+\appendix
+\section{Definition of ``mildly context-sensitive''}
+\label{app:definitions}
+
+The precise definition of the class of mildly context-sensitive languages comes from \cite{kallmeyer}.
+It requires first this property of languages that states roughly that if one orders the strings in a language by increasing length, the difference between the lengths of two consecutive strings grows in a linear way.
+\begin{definition}
+  Let $\Sigma$ be an alphabet and $L\subseteq\Sigma^*$.
+  $L$ has the \emph{constant growth property} if there is a contstant $c_0>0$ and a finite set of positive constants $C\subseteq\mathbb{N}$ such that for all $w\in L$ with $|w|>c_0$, there exists a $w'\in L$ with $|w|=|w'|+c$ for some $c\in C$.
+\end{definition}
+\begin{definition}\mbox{}
+  \begin{itemize}
+  \item A language $L$ is \emph{mildly context-sensitive} if it is in $\P$ and has the constant-growth property.
+  \item A class of languages $\mathcal{C}$ is \emph{mildly context-sensitive} if
+    \begin{enumerate}
+    \item All languages in $\mathcal{C}$ are mildly context-sensitive languages.
+    \item $\CFL\subseteq\mathcal{C}$.
+    \item $\mathcal{C}$ can describe \emph{cross-serial dependencies}, that is, there exists an $n\geq 2$ such that for all $k\leq n$, $\lb w^k \st w\in T^*\rb\in\mathcal{C}$.
+    \end{enumerate}
+  \item A formalism $\mathcal{F}$ (e.g. an abstract machine or a grammar) is \emph{mildly context-sensitive} if $\lb L \st \exists F\in\mathcal{F}\colon L = L(F)\rb$ is a mildly context-sensitive class of languages.
+  \item Denote the largest mildly context-sensitive class of languages by $\MCSL$.
+  \end{itemize}
+\end{definition}
+
+In \cite{kallmeyer}, Kallmeyer states, ``So far, it has not been possible to identify a grammar formalism that generates the largest possible mildly context-sensitive class of string languages.''
+But she proposes a formalism which is more general than all known examples of mildly context-sensitive formalisms, yet still mildly context-sensitive itself.
 
 \end{document}
