@@ -1,7 +1,7 @@
 %%%%
 %% parseable.tex
 %%
-%% Copyright 2011 Jeffrey Finkelstein
+%% Copyright 2012 Jeffrey Finkelstein
 %%
 %% Except where otherwise noted, this work is made available under the terms of
 %% the Creative Commons Attribution-ShareAlike 3.0 license,
@@ -78,9 +78,9 @@
 In this work, we wish to determine the complexity of deciding whether a given multiset of symbols, chosen from some finite set of symbols, can be derived according to the rules of a given context-free grammar.
 Providing an upper bound for this problem is of interest to computational linguistics, one goal of which is to classify the complexity of parsing and understanding natural language.
 
-We define the context-free grammar of first-order predicate logic as follows.
+We define the context-free grammar of first-order propositional logic as follows.
 \begin{definition}
-  The language of first-order predicate logic consists of
+  The language of first-order propositional logic consists of
   \begin{itemize}
   \item a set of variables $\{x_1, x_2, \ldots, x_n\}$,
   \item a set of constants $\{a_1, a_2, \ldots, a_c\}$,
@@ -108,7 +108,7 @@ We define the context-free grammar of first-order predicate logic as follows.
   \end{figure}
 \end{definition}
 
-\begin{technicality}\label{tech:arity}
+\begin{technicality}\label{tch:encoding}
   In practice, decimal numbers may be encoded using binary strings.
   Additionally, symbols with indices or arities may not be treated atomically.
   However, we can encode, for example, a function $f_i^j$ (and similarly for a relation $R_i^j$) as the string $f0^i10^j$.
@@ -116,10 +116,16 @@ We define the context-free grammar of first-order predicate logic as follows.
   This allows us to drop the commas as well, since the arity of the function is specified in the prefix.
 \end{technicality}
 
+\begin{technicality}\label{tch:boundedarity}
+  We require that the arity of each function and relation is finite.
+  With this restriction, we can describe first-order propositional logic with a context-free grammar.
+  %% TODO cite Tarski and Givant 1987: A Formalization of Set Theory Without Variables. AMS, Providence RI
+\end{technicality}
+
 \begin{definition}
   Let $V$ be a set of variables, $A$ a set of constants, $F$ a set of functions (with their arities), $P$ a set of relations (with their arities), and $L$ the set of logical symbols.
   Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
-  Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order predicate logic given in the previous definition.
+  Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order propositional logic given in the previous definition.
 
   A variable $x\in V$ is \emph{bound} if it is the descendant of a quantified formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
   A variable is \emph{free} if it is not bound.
