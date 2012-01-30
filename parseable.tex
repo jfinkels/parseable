@@ -37,14 +37,16 @@
 
 \newtheorem{theorem}{Theorem}
 
-\newtheorem{conjecture}{Conjecture}
 \newenvironment{sketch}{\begin{proof}[Proof sketch]}{\end{proof}}
 \newenvironment{rationale}{\begin{proof}[Rationale]}{\end{proof}}
 
 \newtheorem{todo}{TODO}
 \newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{lemma}{Lemma}
 \theoremstyle{remark} \newtheorem{technicality}{Technical note}
 \theoremstyle{definition} \newtheorem{definition}{Definition}
+\theoremstyle{definition} \newtheorem{openproblem}{Open problem}
 
 \long\def\symbolfootnote#1{\begingroup%
 \def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup} 
@@ -244,13 +246,25 @@ If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arb
 \end{langdef}
 
 With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence.
-
+First we make the following conjecture about the general recognition (that is, parsing) problem for the class of permuted indexed languages.
 \begin{conjecture}
   The recognition problem for the class of permuted indexed languages is \EXP-complete.
 \end{conjecture}
 \begin{rationale}
   Checking each permutation can be performed in exponential time, and the recognition problem for indexed languages reduces to it.
 \end{rationale}
+
+\begin{lemma}
+  $\lang{\pp}\in\NP$.
+\end{lemma}
+\begin{proof}
+  The witness is the permutation, whose length is polynomial with respect to the set of input symbols.
+  The verification procedure is the procedure for parsing a string given a context-free grammar, which is computable in polynomial time.
+\end{proof}
+
+\begin{openproblem}
+  Is \lang{CLOSED} a mildly context-sensitive language? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}? If so, then it is decidable in polynomial time, and hence $\lang{\pc}\in\NP$.
+\end{openproblem}
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
