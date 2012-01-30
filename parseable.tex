@@ -129,31 +129,30 @@ We define the context-free grammar of first-order predicate logic as follows.
   A \emph{closed formula} (or a \emph{sentence}) is a formula in which all variables appearing in the formula are bound.
 \end{definition}
 
-%% TODO change w to phi
 \begin{langdef}{PARSEABLE}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Is $w$ a well-formed formula?
+    Is $\phi$ a well-formed formula?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{CLOSED}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Is $w$ a closed well-formed formula?
+    Is $\phi$ a closed well-formed formula?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{NVQ}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $w$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Is $w$ a well-formed formula with no vacuous quantifiers?
+    Is $\phi$ a well-formed formula with no vacuous quantifiers?
   \end{question}
 \end{langdef}
 
@@ -213,28 +212,28 @@ If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arb
 
 \begin{langdef}{\pp}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{PARSEABLE}$?
+    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{PARSEABLE}$?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pc}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{CLOSED}$?
+    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{CLOSED}$?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pn}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $W$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $W$ such that $\sigma(W)\in\lang{NVQ}$?
+    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{NVQ}$?
   \end{question}
 \end{langdef}
 
