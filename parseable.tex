@@ -211,11 +211,17 @@ We know the following facts about the complexity of the three languages of inter
 \item $\lang{CLOSED}\in\INDEXED\setminus\CFL$. \cite{mp84}
 \item It is conjectured in \cite{mp84} that $\lang{NVQ}\notin\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
 \end{itemize}
-\lang{CLOSED} may in fact be in a complexity class which is a subset of $\INDEXED$, like, for example, the class of mildly context-sensitive languages.
-This seems to be an open problem.
 
-In addition to the three problems defined above, we will consider three corresponding problems which are at least as difficult.
-We wish to decide whether a given multiset of symbols has a permutation which is parseable, closed, or without vacuous quantifiers.
+\begin{openproblem}
+  Is \lang{CLOSED} a mildly context-sensitive language (more formally, is $\lang{CLOSED}\in\MCSL\setminus\CFL$)? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}?
+\end{openproblem}
+
+\begin{openproblem}
+  Is $\lang{NVQ}\notin\INDEXED$?
+\end{openproblem}
+
+We will consider also the following problems: given a multiset of symbols, decide if there is a permutation of the symbols which is parseable, closed, or without vacuous quantifiers, respectively.
+We formalize these problems as follows.
 If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arbitrary order) and $\sigma\in S_n$ (that is, a permutation on $n$ elements), then we will denote by $\sigma(W)$ the sequence $(a_{\sigma(1)}, a_{\sigma(2)}, \ldots, a_{\sigma(n)})$.
 
 \begin{langdef}{\pp}
@@ -245,25 +251,12 @@ If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arb
   \end{question}
 \end{langdef}
 
-With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence.
-First we make the following conjecture about the general recognition (that is, parsing) problem for the class of permuted indexed languages.
-\begin{conjecture}
-  The recognition problem for the class of permuted indexed languages is \EXP-complete.
-\end{conjecture}
-\begin{rationale}
-  Checking each permutation can be performed in exponential time, and the recognition problem for indexed languages reduces to it.
-\end{rationale}
-
-\begin{lemma}
-  $\lang{\pp}\in\NP$.
-\end{lemma}
-\begin{proof}
-  The witness is the permutation, whose length is polynomial with respect to the set of input symbols.
-  The verification procedure is the procedure for parsing a string given a context-free grammar, which is computable in polynomial time.
-\end{proof}
+With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence (preferably one which is semantically valid, but we will just consider syntax for now).
 
 \begin{openproblem}
-  Is \lang{CLOSED} a mildly context-sensitive language? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}? If so, then it is decidable in polynomial time, and hence $\lang{\pc}\in\NP$.
+  Is $\lang{\pc}\in\INDEXED\setminus\MCSL$? Generally, permutations of parseable languages are easier than the originals, so it should be possible to put $\lang{\pc}\in\INDEXED$. To show this, one might start by showing that a one-way nondeterministic nested stack automaton accepts $\lang{\pc}$.
+
+  A related problem is determining if $\lang{\pn}\in\INDEXED$.
 \end{openproblem}
 
 \bibliographystyle{plain}
