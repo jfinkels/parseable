@@ -266,12 +266,8 @@ With these problems, we wish to capture the situation in which a human has a jum
 \section{Definition of ``mildly context-sensitive''}
 \label{app:definitions}
 
-The precise definition of the class of mildly context-sensitive languages comes from \cite{kallmeyer}.
-It requires first this property of languages that states roughly that if one orders the strings in a language by increasing length, the difference between the lengths of two consecutive strings grows in a linear way.
-\begin{definition}
-  Let $\Sigma$ be an alphabet and $L\subseteq\Sigma^*$.
-  $L$ has the \emph{constant growth property} if there is a constant $c_0>0$ and a finite set of positive constants $C\subseteq\mathbb{N}$ such that for all $w\in L$ with $|w|>c_0$, there exists a $w'\in L$ with $|w|=|w'|+c$ for some $c\in C$.
-\end{definition}
+The precise definition of the class of mildly context-sensitive languages comes from \cite[Definition~1]{kallmeyer}.
+We refer you to that work for the precise definition of the ``constant growth property'' that states roughly that if one orders the strings in a language by increasing length, the difference between the lengths of two consecutive strings grows in a linear way.
 \begin{definition}\mbox{}
   \begin{itemize}
   \item A language $L$ is \emph{mildly context-sensitive} if it is in $\P$ and has the constant-growth property.
