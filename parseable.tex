@@ -220,41 +220,48 @@ We know the following facts about the complexity of the three languages of inter
   Is $\lang{NVQ}\notin\INDEXED$?
 \end{openproblem}
 
-We will consider also the following problems: given a multiset of symbols, decide if there is a permutation of the symbols which is parseable, closed, or without vacuous quantifiers, respectively.
-We formalize these problems as follows.
-If $W$ is a multiset containing the symbols $a_1, a_2, \ldots, a_n$ (in some arbitrary order) and $\sigma\in S_n$ (that is, a permutation on $n$ elements), then we will denote by $\sigma(W)$ the sequence $(a_{\sigma(1)}, a_{\sigma(2)}, \ldots, a_{\sigma(n)})$.
+We will consider also permutation problems corresponding to \lang{PARSEABLE}, \lang{CLOSED}, and \lang{NVQ}.
+In the definitions below, if $w$ is a word composed of symbols $w_1w_2\cdots w_n$ and $\sigma$ is a permutation on $n$ elements then we define $\sigma(w)=w_{\sigma(1)}w_{\sigma(2)}\cdots w_{\sigma(n)}$.
 
 \begin{langdef}{\pp}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{PARSEABLE}$?
+    Does there exist a permutation on $n$ elements, $\sigma$, such that $\sigma(\phi)\in\lang{PARSEABLE}$?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pc}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{CLOSED}$?
+    Does there exist a permutation on $n$ elements, $\sigma$, such that $\sigma(\phi)\in\lang{CLOSED}$?
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pn}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and a multiset $\Phi$ with elements chosen from $V\cup A\cup F\cup P\cup L$
+    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the elements of $\Phi$ such that $\sigma(\Phi)\in\lang{NVQ}$?
+    Does there exist a permutation, $\sigma$, of the symbols of $\phi$ such that $\sigma(\phi)\in\lang{NVQ}$?
   \end{question}
 \end{langdef}
 
 With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence (preferably one which is semantically valid, but we will just consider syntax for now).
 
+\begin{todo}
+  Explain the significance of the \lang{\pp}, \lang{\pc}, and \lang{\pn} problems with respect to natural language parsing and computational linguistics.
+\end{todo}
+
 \begin{openproblem}
-  Is $\lang{\pc}\in\INDEXED\setminus\MCSL$? Generally, permutations of parseable languages are easier than the originals, so it should be possible to put $\lang{\pc}\in\INDEXED$. To show this, one might start by showing that a one-way nondeterministic nested stack automaton accepts $\lang{\pc}$.
+  Is $\lang{\pc}\in\INDEXED$?
+  Is it in $\MCSL$?
+  Generally, permutations of parseable languages are easier than the originals, so it should be possible to put $\lang{\pc}\in\INDEXED$.
+  To show this, one might start by showing that a one-way nondeterministic nested stack automaton accepts $\lang{\pc}$.
+  Or that a linear indexed grammar generates all words $\phi$ which have some permutation which is a closed well-formed formula.
 
   A related problem is determining if $\lang{\pn}\in\INDEXED$.
 \end{openproblem}
