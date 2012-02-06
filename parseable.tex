@@ -27,13 +27,15 @@
 \documentclass[draft]{article}
 \usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[small, bf]{caption}
 \usepackage{complexity}
-\usepackage{float}
+%\usepackage{float}
 \usepackage{syntax}
 \usepackage[pdftitle={Parsing first-order propositional logic}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
 
-\floatstyle{ruled}
-\restylefloat{figure}
+%\floatstyle{ruled}
+%\restylefloat{figure}
 
 \newtheorem{theorem}{Theorem}
 
@@ -265,6 +267,62 @@ With these problems, we wish to capture the situation in which a human has a jum
 
   A related problem is determining if $\lang{\pn}\in\INDEXED$.
 \end{openproblem}
+
+\autoref{fig:closedlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \lang{\pc}.
+\autoref{fig:nvqlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \lang{\pn}.
+
+\begin{figure}
+  \caption{
+    \label{fig:closedlmg}
+    Literal movement grammar for \lang{\pc}.
+    $Q_i$ represents a quantification of variable $x_i$.
+    After quantification, this grammar allows any number of instances of the variable $x_i$ to occur in rule $V_i$.
+    The rules for producing the other symbols of first-order propositional logic have been omitted, as represented by the vertical ellipsis.
+    Note: this grammar can derive strings with vacuous quantifiers.
+  }
+  \begin{align*}
+    & S(\epsilon) \rightarrow \epsilon \\
+    & S(X) \rightarrow Q_i(X) \\
+    & Q_i(X\forall Y x_i Z) \rightarrow V_i(XYZ) \\
+    & Q_i(X x_i Y \forall Z) \rightarrow V_i(XYZ) \\
+    & V_i(X x_i Y) \rightarrow V_i(XY) \\
+    & V_i(X) \rightarrow S(X) \\
+    & \vdots
+  \end{align*}
+\end{figure}
+
+\begin{figure}
+  \caption{
+    \label{fig:nvqlmg}
+    Literal movement grammar for \lang{\pn}.
+    $V_i$ represents an instance of variable $x_i$.
+    After generating any number of instances of variable $x_i$, it is quantified by the rule $Q_i$.
+    After that, production of instances of variable $x_{i+1}$ is allowed.
+    Shortcuts are provided for skipping any unused variables to avoid vacuous quantification.
+    The rules for producing the other symbols of first-order propositional logic follow from rule $R$ and are omitted here, as represented by the second vertical ellipsis.
+    Note: this grammar can derive strings with free variables.
+  }
+  \begin{align*}
+    & S(\epsilon) \rightarrow \epsilon \\
+    & S(X) \rightarrow Q_i(X) \\
+    & V_1(X x_i Y) \rightarrow V_1(XY) \\
+    & V_1(X) \rightarrow Q_1(X) \\
+    & V_1(X) \rightarrow V_2(X) \\
+    & Q_1(X\forall Y x_1 Z) \rightarrow V_2(XYZ) \\
+    & Q_1(X x_1 Y \forall Z) \rightarrow V_2(XYZ) \\
+    & \vdots \\
+    & Q_n(X x_n Y \forall Z) \rightarrow R(XYZ) \\
+    & Q_n(X \forall Y x_n Z) \rightarrow R(XYZ) \\
+    & \vdots
+  \end{align*}
+\end{figure}
+
+\begin{todo}
+  Definition of combinatorial, linear, non-erasing literal movement grammars.
+\end{todo}
+\begin{todo}
+  Determine the complexity of the literal movement grammar in \autoref{fig:closedlmg} and \autoref{fig:nvqlmg}.
+\end{todo}
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
