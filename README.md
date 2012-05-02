@@ -10,8 +10,8 @@ packages:
 * `hyperref.sty`
 * `syntax.sty`
 
-On Ubuntu 11.04 or 11.10, the necessary system packages which contain these
-LaTeX packages are:
+On Ubuntu 11.04, 11.10, or 12.04, the necessary system packages which
+contain these LaTeX packages are:
 
 * `texlive-latex-base`
 * `texlive-latex-extra`
