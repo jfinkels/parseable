@@ -1,37 +1,22 @@
 %%%%
 %% parseable.tex
 %%
-%% Copyright 2012 Jeffrey Finkelstein
+%% Copyright 2012, 2014 Jeffrey Finkelstein.
 %%
-%% Except where otherwise noted, this work is made available under the terms of
-%% the Creative Commons Attribution-ShareAlike 3.0 license,
-%% http://creativecommons.org/licenses/by-sa/3.0/.
-%%
-%% You are free:
-%%    * to Share — to copy, distribute and transmit the work
-%%    * to Remix — to adapt the work
-%% Under the following conditions:
-%%    * Attribution — You must attribute the work in the manner specified by
-%%    the author or licensor (but not in any way that suggests that they
-%%    endorse you or your use of the work).
-%%    * Share Alike — If you alter, transform, or build upon this work, you may
-%%    distribute the resulting work only under the same, similar or a 
-%%    compatible license.
-%%    * For any reuse or distribution, you must make clear to others the 
-%%    license terms of this work. The best way to do this is with a link to the
-%%    web page http://creativecommons.org/licenses/by-sa/3.0/.
-%%    * Any of the above conditions can be waived if you get permission from
-%%    the copyright holder.
-%%    * Nothing in this license impairs or restricts the author's moral rights.
+%% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+%% International License. To view a copy of this license, visit
+%% http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative
+%% Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041,
+%% USA.
 %%%%
-\documentclass[draft]{article}
+\documentclass{article}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage[small, bf]{caption}
+%\usepackage[small, bf]{caption}
 \usepackage{complexity}
 %\usepackage{float}
-\usepackage{syntax}
+%\usepackage{syntax}
 \usepackage[pdftitle={Parsing first-order propositional logic}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
 
 %\floatstyle{ruled}
@@ -50,124 +35,104 @@
 \theoremstyle{definition} \newtheorem{definition}{Definition}
 \theoremstyle{definition} \newtheorem{openproblem}{Open problem}
 
-\long\def\symbolfootnote#1{\begingroup%
-\def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup} 
-\newcommand{\makelicense}{
-  Copyright 2012 Jeffrey Finkelstein.
-  This work is licensed under the Creative Commons Attribution-ShareAlike License.
-  To view a copy of this license, visit \mbox{\url{http://creativecommons.org/licenses/by-sa/3.0/}}}
-
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}} % formatting emails
 \newcommand{\pair}[2]{\langle#1,#2\rangle} % pairing function
 \newcommand{\lb}{\left\{} % left curly brace for set notation
 \newcommand{\rb}{\right\}} % right curly brace for set notation
 \newcommand{\st}{\,\middle|\,} % ``such that'' pipe, for use in set definitions
+\newcommand{\yields}{\rightarrow}
 
-\newenvironment{langdef}[1]{\begin{definition}{\lang{#1}}}{\end{definition}}
+\newcommand{\CLOSED}{\textsc{Closed}}
+\newcommand{\PARSEABLE}{\textsc{Parseable}}
+\newcommand{\NVQ}{\textsc{No Vacuous Quantifiers}}
+
+\newenvironment{langdef}[1]{\begin{definition}[#1]\mbox{}}{\end{definition}}
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{question}{\\Question:}{}
 
-\newcommand{\pp}{PERM\mbox{-}PARSEABLE}
-\newcommand{\pc}{PERM\mbox{-}CLOSED}
-\newcommand{\pn}{PERM\mbox{-}NVQ}
+\newcommand{\pp}{\textsc{Perm Parseable}}
+\newcommand{\pc}{\textsc{Perm Closed}}
+\newcommand{\pn}{\textsc{Perm NVQ}}
 
-\author{Jef{}frey~Finkelstein \and Andr\'as Kornai}
+\author{Jeffrey~Finkelstein \and Andr\'as~Kornai}
 \title{Parsing first-order propositional logic}
 \date{\today}
 
 \begin{document}
 \maketitle
-\symbolfootnote{\makelicense}
 
 In this work, we wish to determine the complexity of deciding whether a given multiset of symbols, chosen from some finite set of symbols, can be derived according to the rules of a given context-free grammar.
 Providing an upper bound for this problem is of interest to computational linguistics, one goal of which is to classify the complexity of parsing and understanding natural language.
 
-We define the context-free grammar of first-order propositional logic as follows.
-\begin{definition}
-  The language of first-order propositional logic consists of
-  \begin{itemize}
-  \item a set of variables $\{x_1, x_2, \ldots, x_n\}$,
-  \item a set of constants $\{a_1, a_2, \ldots, a_c\}$,
-  \item a set of functions $\{f^{m_1}_1, f^{m_2}_2, \ldots, f^{m_k}_k\}$, where each function $f_i$ has arity $m_i$,
-  \item a set of relations (or ``propositions'') $\{R^{l_1}_1, R^{l_2}_2, \ldots, R^{l_d}_d\}$, where each relation $R_i$ has arity $l_i$, and
-  \item a set of logical symbols $\{\land, \lor, \lnot, \exists, \forall, C\}$ (where $C$ represents a comma).
-  \end{itemize}
-  subject to the grammar described in \autoref{fig:grammar}.
-  Without loss of generality, we will use Polish (prefix) notation for the grammar.
-  \begin{figure}
-    \caption{\label{fig:grammar}The context-free grammar specification in Backus--Naur form for first-order propositional logic (using Polish [prefix] notation).
-    Here, $\lambda$ represents the empty string.}
-  \begin{grammar}
-    <term> := $x_i$, where $x_i$ is a variable
-    \alt $a_i$, where $a_i$ is a term
-    \alt $f^m_i(t_1, t_2, \ldots, t_m)$, where each $t_j$ is a <term>
-
-    <formula> := $R^l_i(F_1, F_2, \ldots, F_l)$, where each $F_j$ is a <formula>
-    \alt $\lor$ <formula> <formula>
-    \alt $\land$ <formula> <formula>
-    \alt $\lnot$ <formula>
-    \alt $\exists x_i$ <formula>, where $x_i$ is a variable
-    \alt $\forall x_i$ <formula>, where $x_i$ is a variable
-  \end{grammar}
-  \end{figure}
+We consider a simplified subset of fist-order propositional logic consisting of only those formulas containing universal quantification, conjunction operations, and equality relations.
+Variables $x_i$ will be represented as $i$ repetitions of the symbol $x$ (for example, $x_3$ becomes $xxx$).
+\begin{definition}[\cite{mp84}]
+  The context-free language $L$ of \emph{restricted first-order propositional logic} is defined by the following context-free grammar.
+  The set of terminals is $\left\{\land, =, \forall, x, (, ) \right\}$, the set of nonterminals is $\{S, V\}$, and the grammar is as follows.
+  \begin{align*}
+    S &\yields (S \land S) \\
+    S &\yields (V = V) \\
+    S &\yields \forall \, V S \\
+    V &\yields Vx \\
+    V &\yields x
+  \end{align*}
+  A string generated by this grammar is a \emph{well-formed formula}.
 \end{definition}
 
-\begin{technicality}\label{tch:encoding}
-  In practice, decimal numbers may be encoded using binary strings.
-  Additionally, symbols with indices or arities may not be treated atomically.
-  However, we can encode, for example, a function $f_i^j$ (and similarly for a relation $R_i^j$) as the string $f0^i10^j$.
-  More specifically, the application of the function $f_5^3$ to the inputs $x_1$, $x_2$, and $x_3$ can be encoded as $f000001000 x1 x10 x11$.
-  This allows us to drop the commas as well, since the arity of the function is specified in the prefix.
-\end{technicality}
+%% \begin{technicality}\label{tch:encoding}
+%%   In practice, decimal numbers may be encoded using binary strings.
+%%   Additionally, symbols with indices or arities may not be treated atomically.
+%%   However, we can encode, for example, a function $f_i^j$ (and similarly for a relation $R_i^j$) as the string $f0^i10^j$.
+%%   More specifically, the application of the function $f_5^3$ to the inputs $x_1$, $x_2$, and $x_3$ can be encoded as $f000001000 x1 x10 x11$.
+%%   This allows us to drop the commas as well, since the arity of the function is specified in the prefix.
+%% \end{technicality}
 
-\begin{technicality}\label{tch:boundedarity}
-  We require that the arity of each function and relation is finite.
-  With this restriction, we can describe first-order propositional logic with a context-free grammar.
-  %% TODO cite Tarski and Givant 1987: A Formalization of Set Theory Without Variables. AMS, Providence RI
-\end{technicality}
+%% \begin{technicality}\label{tch:boundedarity}
+%%   We require that the arity of each function and relation is finite.
+%%   With this restriction, we can describe first-order propositional logic with a context-free grammar.
+%%   %% TODO cite Tarski and Givant 1987: A Formalization of Set Theory Without Variables. AMS, Providence RI
+%% \end{technicality}
 
 \begin{definition}
-  Let $V$ be a set of variables, $A$ a set of constants, $F$ a set of functions (with their arities), $P$ a set of relations (with their arities), and $L$ the set of logical symbols.
-  Let $w$ be a word over the alphabet $V\cup A\cup F\cup P\cup L$.
-  Then $w$ is a \emph{well-formed formula} if there exists a parse-tree which generates $w$ according to the rules of the context-free grammar for first-order propositional logic given in the previous definition.
+  Consider a string in the language $L$ and its associated parse-tree.
+  A variable $x_i$ is \emph{bound} if it is the descendant of a quantified formula in which that variable is quantified; a variable is \emph{free} if it is not bound.
+  The \emph{scope} of a quantifier (with respect to its quantified variable) is the well-formed formula following it (that is, the formula $S$ in the production $S \yields \forall \, V S$).
 
-  A variable $x\in V$ is \emph{bound} if it is the descendant of a quantified formula in which that variable is quantified (either univerally as $\forall x$ or existentially as $\exists x$).
-  A variable is \emph{free} if it is not bound.
-  The \emph{scope} of a quantifier (with respect to its quantified variable) is the well-formed formula following it.
   A \emph{vacuous quantifier} is one whose quantified variable does not appear as a free variable in its scope (though the variable may appear as a bound variable).
-
   A \emph{closed formula} (or a \emph{sentence}) is a formula in which all variables appearing in the formula are bound.
 \end{definition}
 
-\begin{langdef}{PARSEABLE}
+In each of the problems defined below, the alphabet $T$ is the set of terminals in the grammar of $L$.
+\begin{langdef}{\PARSEABLE}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    a word $\phi$ over the alphabet $T$
   \end{instance}
   \begin{question}
     Is $\phi$ a well-formed formula?
+    (In other words, is $\phi$ in $L$?)
   \end{question}
 \end{langdef}
 
-\begin{langdef}{CLOSED}
+\begin{langdef}{\CLOSED}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    a word $\phi$ over the alphabet $T$
   \end{instance}
   \begin{question}
     Is $\phi$ a closed well-formed formula?
   \end{question}
 \end{langdef}
 
-\begin{langdef}{NVQ}
+\begin{langdef}{\NVQ}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$
+    a word $\phi$ over the alphabet $T$
   \end{instance}
   \begin{question}
     Is $\phi$ a well-formed formula with no vacuous quantifiers?
   \end{question}
 \end{langdef}
 
-\lang{CLOSED} is sometimes called the ``no free variables'' problem, and \lang{NVQ} is sometimes called the ``no vacuous quantifiers'' problem.
-Note that \lang{NVQ} does not require that the well-formed formula be closed, just that is has no vacuous quantifiers.
+\CLOSED{} is sometimes called the ``no free variables'' problem, and \NVQ{} is sometimes called the ``no vacuous quantifiers'' problem.
+\CLOSED{} does not require that the formula has no vacuous quantifiers and \NVQ{} does not require that the formula be closed.
 
 Let us define some complexity classes in order to help classify the complexity of these problems.
 \begin{definition}\mbox{}
@@ -178,9 +143,9 @@ Let us define some complexity classes in order to help classify the complexity o
   \item $\GCSL$ is the set of all context-sensitive languages in which the right side of each transformation in the context-sensitive grammar is either strictly longer than the left side or the left side is the start symbol.
   \item $\MCSL$ is the set of all mildly context-sensitive languages (for a precise definition, see \autoref{app:definitions}).
     % from Hopcroft Ullman
-  \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata.
-  \item $\AC^1$ is the set of all languages accepted by non-uniform, polynomial size, $O(\lg(n))$, unbounded fan-in circuits with AND, OR, and NOT gates.
-  \item $\NC^2$ is the set of all languages accepted by uniform, polynomial size, $O(\lg^2(n))$, fan-in 2 circuits with AND, OR, and NOT gates.
+  \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata \cite{aho}.
+  \item $\AC^1$ is the set of all languages accepted by non-uniform, polynomial size, $O(\log n)$, unbounded fan-in circuits with AND, OR, and NOT gates.
+  \item $\NC^2$ is the set of all languages accepted by uniform, polynomial size, $O(\log^2 n)$, fan-in 2 circuits with AND, OR, and NOT gates.
   \item $\P$ is the set of all languages accepted by a deterministic Turing machine running in polynomial time.
   \item $\NSPACE(n)$ is the set of all languages accepted by a nondeterministic Turing machine using at most $n$ space, where $n$ is the length of the input.
   \item $\NLINSPACE$ is the set of all languages accepted by a nondeterministic Turing machine using space at most linear in the length of the input.
@@ -188,14 +153,8 @@ Let us define some complexity classes in order to help classify the complexity o
   \item $\NSA$ is the set of all languages accepted by one-way nondeterministic stack automata.
   \end{itemize}
 \end{definition}
-Indexed grammars were introduced by Aho in \cite{aho}.
 
-The recognition problem (also known as the parsing problem) for a class of languages $\mathcal{C}$ is the problem of deciding membership in $\lb\pair{L}{w}\st w\in L \land L\in\mathcal{C} \rb$.
-% source: Wikipedia article on CYK algorithm
-The recognition problem for context-free languages is decidable in polynomial time (by, for example, the CYK algorithm).
-The recognition problem for indexed languages is \EXP-complete \cite{tk86} (the cited article is not available, but I have ordered a copy of it from the library).
-
-Just for context (pun intended), here's some inclusions among these complexity classes.
+Here are some inclusions among these complexity classes.
 Some of these inclusions are strict.
 \begin{theorem}\mbox{}
   \begin{enumerate}
@@ -209,72 +168,79 @@ Some of these inclusions are strict.
 
 We know the following facts about the complexity of the three languages of interest.
 \begin{itemize}
-\item $\lang{PARSEABLE}\in\CFL$.
-\item $\lang{CLOSED}\in\INDEXED\setminus\CFL$. \cite{mp84}
-\item It is conjectured in \cite{mp84} that $\lang{NVQ}\notin\INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
+\item $\PARSEABLE \in \CFL$.
+\item $\CLOSED \in \INDEXED \setminus \CFL$. \cite{mp84}
+\item It is conjectured in \cite{mp84} that $\NVQ \notin \INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
 \end{itemize}
 
+%% The general \emph{recognition problem} (also known as the \emph{parsing problem} or \emph{membership problem}) for a class of languages $\mathcal{C}$ is the problem of deciding membership in $\lb\pair{A}{w} \st A \in \mathcal{C} \text{ and } w \in A \rb$.
+%% The recognition problem for indexed languages is \EXP-complete \cite{tk86}.
+%% %% I have a print copy of the cited article somewhere.
+%% (Compare with the recognition problem for context-free languages, which is decidable in polynomial time by, for example, the CYK algorithm.)
+%% % source: Wikipedia article on CYK algorithm
+
 \begin{openproblem}
-  Is \lang{CLOSED} a mildly context-sensitive language (more formally, is $\lang{CLOSED}\in\MCSL\setminus\CFL$)? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}?
+  Is \CLOSED{} a mildly context-sensitive language (more formally, is $\CLOSED \in \MCSL \setminus \CFL$)? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}?
 \end{openproblem}
 
 \begin{openproblem}
-  Is $\lang{NVQ}\notin\INDEXED$?
+  Is $\NVQ \notin \INDEXED$?
 \end{openproblem}
 
-We will consider also permutation problems corresponding to \lang{PARSEABLE}, \lang{CLOSED}, and \lang{NVQ}.
-In the definitions below, if $w$ is a word composed of symbols $w_1w_2\cdots w_n$ and $\sigma$ is a permutation on $n$ elements then we define $\sigma(w)=w_{\sigma(1)}w_{\sigma(2)}\cdots w_{\sigma(n)}$.
+We will consider also permutation problems corresponding to \PARSEABLE, \CLOSED, and \NVQ.
+In the definitions below, if $w$ is a word composed of symbols $w_1 \dotsb w_n$ and $\sigma$ is a permutation on $n$ elements then we define $\sigma(w) = w_{\sigma(1)} \dotsb w_{\sigma(n)}$.
 
 \begin{langdef}{\pp}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
+    a word $\phi$ of length $n$ over the alphabet $T$
   \end{instance}
   \begin{question}
-    Does there exist a permutation on $n$ elements, $\sigma$, such that $\sigma(\phi)\in\lang{PARSEABLE}$?
+    Is there a permutation $\sigma$ on $n$ elements such that $\sigma(\phi)$ is a well-formed formula?
+    (In other words, is $\phi(w)$ in \PARSEABLE?)
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pc}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
+    a word $\phi$ of length $n$ over the alphabet $T$
   \end{instance}
   \begin{question}
-    Does there exist a permutation on $n$ elements, $\sigma$, such that $\sigma(\phi)\in\lang{CLOSED}$?
+    Is there a permutation $\sigma$ on $n$ elements such that $\sigma(\phi)$ is a closed well-formed formula?
+    (In other words, is $\phi(w)$ in \CLOSED?)
   \end{question}
 \end{langdef}
 
 \begin{langdef}{\pn}
   \begin{instance}
-    finite sets $V, A, F, P,$ and $L$ as described above, and $\phi$ a word over the alphabet $V\cup A\cup F\cup P\cup L$ of length $n$
+    a word $\phi$ of length $n$ over the alphabet $T$
   \end{instance}
   \begin{question}
-    Does there exist a permutation, $\sigma$, of the symbols of $\phi$ such that $\sigma(\phi)\in\lang{NVQ}$?
+    Is there a permutation $\sigma$ on $n$ elements such that $\sigma(\phi)$ is a well-formed formula with no vacuous quantifiers?
+    (In other words, is $\phi(w)$ in \NVQ?)
   \end{question}
 \end{langdef}
 
 With these problems, we wish to capture the situation in which a human has a jumble of linguistic elements and is able to synthesize a natural language sentence (preferably one which is semantically valid, but we will just consider syntax for now).
 
 \begin{todo}
-  Explain the significance of the \lang{\pp}, \lang{\pc}, and \lang{\pn} problems with respect to natural language parsing and computational linguistics.
+  Explain the significance of the \pp, \pc, and \pn{} problems with respect to natural language parsing and computational linguistics.
 \end{todo}
 
 \begin{openproblem}
-  Is $\lang{\pc}\in\INDEXED$?
-  Is it in $\MCSL$?
-  Generally, permutations of parseable languages are easier than the originals, so it should be possible to put $\lang{\pc}\in\INDEXED$.
-  To show this, one might start by showing that a one-way nondeterministic nested stack automaton accepts $\lang{\pc}$.
+  Is either of \pc{} or \pn{} in \INDEXED?
+  Is either in \MCSL?
+  Generally, permutations of parseable languages are easier than the originals (if the number of terminal symbols meets some requirement, then we can rearrange them to choose any appropriate parse-tree), so it should be possible to put $\pc \in \INDEXED$.
+  To show this, one might start by showing that a one-way nondeterministic nested stack automaton accepts $\pc$.
   Or that a linear indexed grammar generates all words $\phi$ which have some permutation which is a closed well-formed formula.
-
-  A related problem is determining if $\lang{\pn}\in\INDEXED$.
 \end{openproblem}
 
-\autoref{fig:closedlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \lang{\pc}.
-\autoref{fig:nvqlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \lang{\pn}.
+\autoref{fig:closedlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \pc.
+\autoref{fig:nvqlmg} is a fragment of a combinatorial, linear, non-erasing literal movement grammar for \pn.
 
 \begin{figure}
   \caption{
     \label{fig:closedlmg}
-    Literal movement grammar for \lang{\pc}.
+    Literal movement grammar for \pc.
     $Q_i$ represents a quantification of variable $x_i$.
     After quantification, this grammar allows any number of instances of the variable $x_i$ to occur in rule $V_i$.
     The rules for producing the other symbols of first-order propositional logic have been omitted, as represented by the vertical ellipsis.
@@ -283,9 +249,9 @@ With these problems, we wish to capture the situation in which a human has a jum
   \begin{align*}
     & S(\epsilon) \rightarrow \epsilon \\
     & S(X) \rightarrow Q_i(X) \\
-    & Q_i(X\forall Y x_i Z) \rightarrow V_i(XYZ) \\
-    & Q_i(X x_i Y \forall Z) \rightarrow V_i(XYZ) \\
-    & V_i(X x_i Y) \rightarrow V_i(XY) \\
+    & Q_i(X \, \forall \, Y \, x_i \, Z) \rightarrow V_i(X \, Y \, Z) \\
+    & Q_i(X \, x_i \, Y \, \forall \, Z) \rightarrow V_i(X\, Y \, Z) \\
+    & V_i(X \, x_i \, Y) \rightarrow V_i(X \, Y) \\
     & V_i(X) \rightarrow S(X) \\
     & \vdots
   \end{align*}
@@ -294,7 +260,7 @@ With these problems, we wish to capture the situation in which a human has a jum
 \begin{figure}
   \caption{
     \label{fig:nvqlmg}
-    Literal movement grammar for \lang{\pn}.
+    Literal movement grammar for \pn.
     $V_i$ represents an instance of variable $x_i$.
     After generating any number of instances of variable $x_i$, it is quantified by the rule $Q_i$.
     After that, production of instances of variable $x_{i+1}$ is allowed.
@@ -305,14 +271,14 @@ With these problems, we wish to capture the situation in which a human has a jum
   \begin{align*}
     & S(\epsilon) \rightarrow \epsilon \\
     & S(X) \rightarrow Q_i(X) \\
-    & V_1(X x_i Y) \rightarrow V_1(XY) \\
+    & V_1(X \, x_i \, Y) \rightarrow V_1(X \, Y) \\
     & V_1(X) \rightarrow Q_1(X) \\
     & V_1(X) \rightarrow V_2(X) \\
-    & Q_1(X\forall Y x_1 Z) \rightarrow V_2(XYZ) \\
-    & Q_1(X x_1 Y \forall Z) \rightarrow V_2(XYZ) \\
+    & Q_1(X \, \forall \, Y \, x_1 \, Z) \rightarrow V_2(X \, Y \, Z) \\
+    & Q_1(X \, x_1 \, Y \, \forall \, Z) \rightarrow V_2(X \, Y \, Z) \\
     & \vdots \\
-    & Q_n(X x_n Y \forall Z) \rightarrow R(XYZ) \\
-    & Q_n(X \forall Y x_n Z) \rightarrow R(XYZ) \\
+    & Q_n(X \, x_n \, Y \, \forall \, Z) \rightarrow R(X \, Y \, Z) \\
+    & Q_n(X \, \forall \,  Y \, x_n \, Z) \rightarrow R(X \, Y \, Z) \\
     & \vdots
   \end{align*}
 \end{figure}
@@ -352,12 +318,13 @@ But she proposes a formalism which is more general than all known examples of mi
 
 \section{About this work}
 
-This work is licensed under the Creative Commons Attribution-ShareAlike License.
-Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
+Copyright 2012, 2013 Jef{}frey Finkelstein.
 
-The \LaTeX{} markup which generated this document can be downloaded at \mbox{\url{https://github.com/jfinkels/parseable}}.
-It is also licensed under the Creative Commons Attribution-ShareAlike License.
+This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+To view a copy of this license, visit the webpage \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
+
+The \LaTeX{} markup that generated this document is available at the webpage \mbox{\url{https://github.com/jfinkels/parseable}}.
+It is also licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
 
 The author can be contacted via email at \email{jeffreyf@bu.edu}.
-
 \end{document}
