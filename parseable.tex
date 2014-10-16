@@ -1,29 +1,70 @@
-%%%%
-%% parseable.tex
+%% parseable.tex - parsing permutations of logic formulas
 %%
-%% Copyright 2012, 2014 Jeffrey Finkelstein.
+%% Copyright 2011, 2012, 2013, 2014 Jeffrey Finkelstein.
 %%
-%% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
-%% International License. To view a copy of this license, visit
-%% http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative
-%% Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041,
-%% USA.
-%%%%
+%% This LaTeX markup document is made available under the terms of the Creative
+%% Commons Attribution-ShareAlike 4.0 International License,
+%% https://creativecommons.org/licenses/by-sa/4.0/.
 \documentclass{article}
-\usepackage{amsthm}
-\usepackage{amssymb}
+
 \usepackage{amsmath}
+\usepackage{amssymb}
+%% This must come before hyperref.
+\usepackage{amsthm}
+%% This is strongly recommended by biblatex.
+\usepackage[english]{babel}
+\usepackage[backend=biber]{biblatex}
+\usepackage[T1]{fontenc}
+%% This must come before csquotes.
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+%% This is strongly recommended by biblatex.
+\usepackage{csquotes}
+%% This must come before hyperref.
+\usepackage{thmtools}
+%% This must come before complexity.
+\usepackage{hyperref}
 \usepackage{complexity}
-\usepackage[pdftitle={Parsing permutations of first-order propositional logic formulas}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+\usepackage[firstpage]{draftwatermark}
+\usepackage{microtype}
+\usepackage{textcomp}
 
-\newtheorem{theorem}{Theorem}
+\LoadMicrotypeFile{cmr}
+\SetProtrusion
+    [load=lmr-T1]
+    {encoding=T1, family=lmr}
+    {
+      \textquotedblright = {,1000},
+      \textquotedblleft = {1000,},
+      {'} = {,1000},
+      {[} = {1000,},
+      {]} = {,1000},
+      {,} = {,1000},
+      {:} = {,1000},
+      {;} = {,1000},
+      {.} = {,1000}
+    }
 
-\newtheorem{todo}{TODO}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\newtheorem{openproblem}{Open problem}
+%% Set the ``work-in-progress'' watermark for the first page.
+\SetWatermarkLightness{0.9}
+\SetWatermarkText{Work-in-progress}
+\SetWatermarkFontSize{3.5cm}
 
-\newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+%% Set the title and author of the PDF file.
+\hypersetup{pdftitle={Parsing permutations of first-order propositional logic formulas}, pdfauthor={Jeffrey Finkelstein}}
+
+%% Declare the bibliography file.
+\addbibresource{parseable.bib}
+
+%% Declare theorem-like environments.
+\declaretheorem[numberwithin=section]{theorem}
+\declaretheorem[numberlike=theorem]{todo}
+\declaretheorem[numberlike=theorem, style=definition]{definition}
+\declaretheorem[numberlike=theorem, style=definition, name=Open problem]{openproblem}
+
+%% Custom commands are declared here.
+\newcommand{\email}[1]{\textlangle\href{mailto:#1}{\nolinkurl{#1}}\textrangle}
+%\newcommand{\todo}[1]{\textbf{TODO #1}}
 \newcommand{\lb}{\left\{} % left curly brace for set notation
 \newcommand{\rb}{\right\}} % right curly brace for set notation
 \newcommand{\st}{\,\middle|\,} % ``such that'' pipe, for use in set definitions
@@ -39,19 +80,32 @@
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{question}{\\Question:}{}
 
+%% Redefine the footnote environment so it has no reference and no number.
+\long\def\symbolfootnote#1{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup}
+
+%% Define the author, title, and date for the document.
 \author{Jeffrey~Finkelstein \and Andr\'as~Kornai}
 \title{Parsing permutations of first-order propositional logic formulas}
-\date{\today}
 
 \begin{document}
+
 \maketitle
+
+\symbolfootnote{%
+  Copyright 2011, 2012, 2013, 2014 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
+
+  This document is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License, which is available at \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
+  The \LaTeX{} markup that generated this document can be downloaded from its website at \mbox{\url{https://github.com/jfinkels/parseable}}.
+  The markup is distributed under the same license.
+}
 
 In this work, we wish to determine the complexity of deciding whether a given multiset of symbols, chosen from some finite set of symbols, can be derived according to the rules of a given context-free grammar.
 Providing an upper bound for this problem is of interest to computational linguistics, one goal of which is to classify the complexity of parsing and understanding natural language.
 
 We consider a simplified subset of fist-order propositional logic consisting of only those formulas containing universal quantification, conjunction operations, and equality relations.
 Variables $x_i$ will be represented as $i$ repetitions of the symbol $x$ (for example, $x_3$ becomes $xxx$).
-\begin{definition}[\cite{mp84}]
+\begin{definition}[\autocite{mp87}]
   The context-free language $L$ of \emph{restricted first-order propositional logic} is defined by the following context-free grammar.
   The set of terminals is $\left\{\land, =, \forall, x, (, ) \right\}$, the set of nonterminals is $\{S, V\}$, and the grammar is as follows.
   \begin{align*}
@@ -128,7 +182,7 @@ Let us define some complexity classes in order to help classify the complexity o
   \item $\GCSL$ is the set of all context-sensitive languages in which the right side of each transformation in the context-sensitive grammar is either strictly longer than the left side or the left side is the start symbol.
   \item $\MCSL$ is the set of all mildly context-sensitive languages (for a precise definition, see \autoref{app:definitions}).
     % from Hopcroft Ullman
-  \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata \cite{aho}.
+  \item $\INDEXED$ is the set of all indexed languages, or equivalently the set of all languages accepted by one-way nondeterministic nested stack automata \autocite{aho}.
   \item $\AC^1$ is the set of all languages accepted by non-uniform, polynomial size, $O(\log n)$, unbounded fan-in circuits with AND, OR, and NOT gates.
   \item $\NC^2$ is the set of all languages accepted by uniform, polynomial size, $O(\log^2 n)$, fan-in 2 circuits with AND, OR, and NOT gates.
   \item $\P$ is the set of all languages accepted by a deterministic Turing machine running in polynomial time.
@@ -147,25 +201,25 @@ Some of these inclusions are strict.
   \item $\CFL\subseteq\AC^1\subseteq\NC^2\subseteq\P$.
     % source: complexity zoo
   \item $\CFL\subseteq\GCSL\subseteq\CSL=\NSPACE(n)\subseteq\NLINSPACE\subseteq\E$.
-  \item $\CFL\subseteq\NSA\subseteq\MCSL\subseteq\INDEXED\subseteq\CSL$ \cite{hu79}.
+  \item $\CFL\subseteq\NSA\subseteq\MCSL\subseteq\INDEXED\subseteq\CSL$ \autocite{hu79}.
   \end{enumerate}
 \end{theorem}
 
 We know the following facts about the complexity of the three languages of interest.
 \begin{itemize}
 \item $\PARSEABLE \in \CFL$.
-\item $\CLOSED \in \INDEXED \setminus \CFL$. \cite{mp84}
-\item It is conjectured in \cite{mp84} that $\NVQ \notin \INDEXED$, though the complexity of this problem still seems to be unknown \cite{potts}.
+\item $\CLOSED \in \INDEXED \setminus \CFL$. \autocite{mp87}
+\item It is conjectured in \autocite{mp87} that $\NVQ \notin \INDEXED$, though the complexity of this problem still seems to be unknown \autocite{potts}.
 \end{itemize}
 
 %% The general \emph{recognition problem} (also known as the \emph{parsing problem} or \emph{membership problem}) for a class of languages $\mathcal{C}$ is the problem of deciding membership in $\lb\pair{A}{w} \st A \in \mathcal{C} \text{ and } w \in A \rb$.
-%% The recognition problem for indexed languages is \EXP-complete \cite{tk86}.
+%% The recognition problem for indexed languages is \EXP-complete \autocite{tk86}.
 %% %% I have a print copy of the cited article somewhere.
 %% (Compare with the recognition problem for context-free languages, which is decidable in polynomial time by, for example, the CYK algorithm.)
 %% % source: Wikipedia article on CYK algorithm
 
 \begin{openproblem}
-  Is \CLOSED{} a mildly context-sensitive language (more formally, is $\CLOSED \in \MCSL \setminus \CFL$)? Could it be decided by, for example, an instance of the formalism described in \cite{kallmeyer}?
+  Is \CLOSED{} a mildly context-sensitive language (more formally, is $\CLOSED \in \MCSL \setminus \CFL$)? Could it be decided by, for example, an instance of the formalism described in \autocite{kallmeyer}?
 \end{openproblem}
 
 \begin{openproblem}
@@ -242,31 +296,31 @@ With these problems, we wish to capture the situation in which a human has a jum
   \end{align*}
 \end{figure}
 
-\begin{figure}
-  \caption{
-    \label{fig:nvqlmg}
-    Literal movement grammar for \pn.
-    $V_i$ represents an instance of variable $x_i$.
-    After generating any number of instances of variable $x_i$, it is quantified by the rule $Q_i$.
-    After that, production of instances of variable $x_{i+1}$ is allowed.
-    Shortcuts are provided for skipping any unused variables to avoid vacuous quantification.
-    The rules for producing the other symbols of first-order propositional logic follow from rule $R$ and are omitted here, as represented by the second vertical ellipsis.
-    Note: this grammar can derive strings with free variables.
-  }
-  \begin{align*}
-    & S(\epsilon) \rightarrow \epsilon \\
-    & S(X) \rightarrow Q_i(X) \\
-    & V_1(X \, x_i \, Y) \rightarrow V_1(X \, Y) \\
-    & V_1(X) \rightarrow Q_1(X) \\
-    & V_1(X) \rightarrow V_2(X) \\
-    & Q_1(X \, \forall \, Y \, x_1 \, Z) \rightarrow V_2(X \, Y \, Z) \\
-    & Q_1(X \, x_1 \, Y \, \forall \, Z) \rightarrow V_2(X \, Y \, Z) \\
-    & \vdots \\
-    & Q_n(X \, x_n \, Y \, \forall \, Z) \rightarrow R(X \, Y \, Z) \\
-    & Q_n(X \, \forall \,  Y \, x_n \, Z) \rightarrow R(X \, Y \, Z) \\
-    & \vdots
-  \end{align*}
-\end{figure}
+%% \begin{figure}
+%%   \caption{
+%%     \label{fig:nvqlmg}
+%%     Literal movement grammar for \pn.
+%%     $V_i$ represents an instance of variable $x_i$.
+%%     After generating any number of instances of variable $x_i$, it is quantified by the rule $Q_i$.
+%%     After that, production of instances of variable $x_{i+1}$ is allowed.
+%%     Shortcuts are provided for skipping any unused variables to avoid vacuous quantification.
+%%     The rules for producing the other symbols of first-order propositional logic follow from rule $R$ and are omitted here, as represented by the second vertical ellipsis.
+%%     Note: this grammar can derive strings with free variables.
+%%   }
+%%   \begin{align*}
+%%     & S(\epsilon) \rightarrow \epsilon \\
+%%     & S(X) \rightarrow Q_i(X) \\
+%%     & V_1(X \, x_i \, Y) \rightarrow V_1(X \, Y) \\
+%%     & V_1(X) \rightarrow Q_1(X) \\
+%%     & V_1(X) \rightarrow V_2(X) \\
+%%     & Q_1(X \, \forall \, Y \, x_1 \, Z) \rightarrow V_2(X \, Y \, Z) \\
+%%     & Q_1(X \, x_1 \, Y \, \forall \, Z) \rightarrow V_2(X \, Y \, Z) \\
+%%     & \vdots \\
+%%     & Q_n(X \, x_n \, Y \, \forall \, Z) \rightarrow R(X \, Y \, Z) \\
+%%     & Q_n(X \, \forall \,  Y \, x_n \, Z) \rightarrow R(X \, Y \, Z) \\
+%%     & \vdots
+%%   \end{align*}
+%% \end{figure}
 
 \begin{todo}
   Definition of combinatorial, linear, non-erasing literal movement grammars.
@@ -275,26 +329,11 @@ With these problems, we wish to capture the situation in which a human has a jum
   Determine the complexity of the literal movement grammar in \autoref{fig:closedlmg} and \autoref{fig:nvqlmg}.
 \end{todo}
 
-\section{About this work}
-
-Copyright 2012, 2013, 2014 Jeffrey~Finkelstein.
-
-This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
-To view a copy of this license, visit the website \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
-
-The \LaTeX{} markup that generated this document is available on its website \mbox{\url{https://github.com/jfinkels/parseable}}.
-The markup is distributed under the same license.
-
-The author can be contacted via email at \email{jeffreyf@bu.edu}.
-
-\bibliographystyle{plain}
-\bibliography{bibliography}
-
 \appendix
 \section{Definition of ``mildly context-sensitive''}
 \label{app:definitions}
 
-The precise definition of the class of mildly context-sensitive languages comes from \cite[Definition~1]{kallmeyer}.
+The precise definition of the class of mildly context-sensitive languages comes from \autocite[Definition~1]{kallmeyer}.
 We refer you to that work for the precise definition of the ``constant growth property'' that states roughly that if one orders the strings in a language by increasing length, the difference between the lengths of two consecutive strings grows in a linear way.
 \begin{definition}\mbox{}
   \begin{itemize}
@@ -310,7 +349,10 @@ We refer you to that work for the precise definition of the ``constant growth pr
   \end{itemize}
 \end{definition}
 
-In \cite{kallmeyer}, Kallmeyer states, ``So far, it has not been possible to identify a grammar formalism that generates the largest possible mildly context-sensitive class of string languages.''
+In \autocite{kallmeyer}, Kallmeyer states, ``So far, it has not been possible to identify a grammar formalism that generates the largest possible mildly context-sensitive class of string languages.''
 But she proposes a formalism which is more general than all known examples of mildly context-sensitive formalisms, yet still mildly context-sensitive itself.
+
+%% Print the bibliography section here.
+\printbibliography
 
 \end{document}
